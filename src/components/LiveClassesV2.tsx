@@ -195,6 +195,9 @@ export const LiveClassesV2: React.FC<LiveClassesV2Props> = ({
   // 3. Third Filter State (Status)
   const [activeStatus, setActiveStatus] = useState<'all' | 'live' | 'upcoming' | 'past'>('all');
 
+  // Side-tab active state for V2 Class Sessions hub
+  const [activeSessionsTab, setActiveSessionsTab] = useState<'live' | 'upcoming' | 'past'>('live');
+
   // Simulated Loading State
   const [isSimulatedLoading, setIsSimulatedLoading] = useState<boolean>(false);
   const loadingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -439,6 +442,24 @@ export const LiveClassesV2: React.FC<LiveClassesV2Props> = ({
     if (primaryFilter === 'weekend' && !isWeekendCourse) return false;
     return c.isTrending || c.isNew || c.showSaleableInfo;
   });
+
+  // Auto-focus the first tab that has courses if the current tab becomes empty due to filtering
+  useEffect(() => {
+    const currentTabHasCourses = 
+      (activeSessionsTab === 'live' && liveFilteredCourses.length > 0) ||
+      (activeSessionsTab === 'upcoming' && upcomingFilteredCourses.length > 0) ||
+      (activeSessionsTab === 'past' && pastFilteredCourses.length > 0);
+      
+    if (!currentTabHasCourses) {
+      if (liveFilteredCourses.length > 0) {
+        setActiveSessionsTab('live');
+      } else if (upcomingFilteredCourses.length > 0) {
+        setActiveSessionsTab('upcoming');
+      } else if (pastFilteredCourses.length > 0) {
+        setActiveSessionsTab('past');
+      }
+    }
+  }, [liveFilteredCourses.length, upcomingFilteredCourses.length, pastFilteredCourses.length, activeSessionsTab]);
 
   // Filtered lists for Section 3 & 4
   const workshopsFiltered = filterList(workshopItems);
@@ -702,120 +723,189 @@ export const LiveClassesV2: React.FC<LiveClassesV2Props> = ({
               className="space-y-16"
             >
               
-              {/* 1. Live Classes Section */}
-              {liveFilteredCourses.length > 0 && (
+              {/* Unified Side-Tabbed Class Sessions Hub */}
+              {(liveFilteredCourses.length > 0 || upcomingFilteredCourses.length > 0 || pastFilteredCourses.length > 0) ? (
                 <section className="space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="relative flex h-2 w-2 shrink-0">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                        </span>
-                        <span className="text-xs bg-red-50 text-red-700 font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-red-250/30">
-                          Live Now
-                        </span>
-                        <h2 className="text-[20px] font-bold text-slate-800 tracking-tight">
-                          Ongoing Live Sessions
-                        </h2>
-                      </div>
-                      <p className="text-slate-500 text-xs font-medium">
-                        Interactive live classrooms happening right now. Join and learn in real time.
-                      </p>
+                  {/* Header */}
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs bg-slate-100 text-slate-700 font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-slate-255/30">
+                        Class Schedule
+                      </span>
+                      <h2 className="text-[20px] font-bold text-slate-800 tracking-tight">
+                        Your Class Sessions Hub
+                      </h2>
                     </div>
-                    <div className="text-xs font-bold text-slate-400 bg-slate-50 border border-slate-200/80 px-3 py-1.5 rounded-xl self-start sm:self-center">
-                      {liveFilteredCourses.length} Active
-                    </div>
+                    <p className="text-slate-500 text-xs font-medium">
+                      Browse your active live classrooms, upcoming schedule, and past recordings in one place.
+                    </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {liveFilteredCourses.map(course => (
-                      <CourseCard 
-                        key={course.id}
-                        {...course}
-                        onEnroll={() => handleJoinClass(course.id)}
-                      />
-                    ))}
+                  {/* Side-Tabbed Container */}
+                  <div className="flex flex-col md:flex-row gap-8 items-start">
+                    
+                    {/* Left side Tab Bar Selector (Vertical on desktop, Horizontal on mobile) */}
+                    <div className="w-full md:w-[250px] shrink-0 bg-white border border-slate-200/60 rounded-[24px] shadow-sm overflow-hidden flex flex-row md:flex-col">
+                      
+                      {/* Live Now Tab */}
+                      <button
+                        onClick={() => setActiveSessionsTab('live')}
+                        className={`flex-1 md:flex-initial flex items-center justify-between px-5 py-4 text-left transition-all cursor-pointer relative select-none border-b md:border-b-0 md:border-l-4 ${
+                          activeSessionsTab === 'live'
+                            ? 'bg-red-50/45 text-red-700 md:border-l-red-500 font-bold'
+                            : 'text-slate-500 hover:bg-slate-50/60 md:border-l-transparent font-semibold'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="relative flex h-2 w-2 shrink-0">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                          </span>
+                          <span className="text-xs sm:text-[13px] tracking-tight">Live Now</span>
+                        </div>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold leading-none ${
+                          activeSessionsTab === 'live' ? 'bg-red-100/80 text-red-750' : 'bg-slate-100 text-slate-550'
+                        }`}>
+                          {liveFilteredCourses.length}
+                        </span>
+                        
+                        {/* Mobile bottom indicator bar */}
+                        {activeSessionsTab === 'live' && (
+                          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-500 md:hidden" />
+                        )}
+                      </button>
+
+                      {/* Upcoming Tab */}
+                      <button
+                        onClick={() => setActiveSessionsTab('upcoming')}
+                        className={`flex-1 md:flex-initial flex items-center justify-between px-5 py-4 text-left transition-all cursor-pointer relative select-none border-b md:border-b-0 md:border-l-4 ${
+                          activeSessionsTab === 'upcoming'
+                            ? 'bg-blue-50/45 text-blue-750 md:border-l-blue-500 font-bold'
+                            : 'text-slate-500 hover:bg-slate-50/60 md:border-l-transparent font-semibold'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Calendar className={`w-4 h-4 shrink-0 ${activeSessionsTab === 'upcoming' ? 'text-blue-600' : 'text-slate-400'}`} />
+                          <span className="text-xs sm:text-[13px] tracking-tight">Upcoming</span>
+                        </div>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold leading-none ${
+                          activeSessionsTab === 'upcoming' ? 'bg-blue-100/80 text-blue-755' : 'bg-slate-100 text-slate-550'
+                        }`}>
+                          {upcomingFilteredCourses.length}
+                        </span>
+
+                        {/* Mobile bottom indicator bar */}
+                        {activeSessionsTab === 'upcoming' && (
+                          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500 md:hidden" />
+                        )}
+                      </button>
+
+                      {/* Recorded Tab */}
+                      <button
+                        onClick={() => setActiveSessionsTab('past')}
+                        className={`flex-1 md:flex-initial flex items-center justify-between px-5 py-4 text-left transition-all cursor-pointer relative select-none md:border-l-4 ${
+                          activeSessionsTab === 'past'
+                            ? 'bg-emerald-50/45 text-emerald-750 md:border-l-emerald-500 font-bold'
+                            : 'text-slate-500 hover:bg-slate-50/60 md:border-l-transparent font-semibold'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Monitor className={`w-4 h-4 shrink-0 ${activeSessionsTab === 'past' ? 'text-emerald-600' : 'text-slate-400'}`} />
+                          <span className="text-xs sm:text-[13px] tracking-tight">Recorded</span>
+                        </div>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold leading-none ${
+                          activeSessionsTab === 'past' ? 'bg-emerald-100/80 text-emerald-755' : 'bg-slate-100 text-slate-550'
+                        }`}>
+                          {pastFilteredCourses.length}
+                        </span>
+
+                        {/* Mobile bottom indicator bar */}
+                        {activeSessionsTab === 'past' && (
+                          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-500 md:hidden" />
+                        )}
+                      </button>
+
+                    </div>
+
+                    {/* Right side Cards Grid Display area */}
+                    <div className="flex-1 w-full min-w-0">
+                      
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={activeSessionsTab}
+                          initial={{ opacity: 0, x: 10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -10 }}
+                          transition={{ duration: 0.15 }}
+                        >
+                          {activeSessionsTab === 'live' && (
+                            liveFilteredCourses.length > 0 ? (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                                {liveFilteredCourses.map(course => (
+                                  <CourseCard 
+                                    key={course.id}
+                                    {...course}
+                                    onEnroll={() => handleJoinClass(course.id)}
+                                  />
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="bg-white border border-slate-200/50 rounded-[24px] p-8 text-center text-slate-400 text-xs font-bold shadow-sm">
+                                No classes currently live in this view.
+                              </div>
+                            )
+                          )}
+
+                          {activeSessionsTab === 'upcoming' && (
+                            upcomingFilteredCourses.length > 0 ? (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                                {upcomingFilteredCourses.map(course => (
+                                  <CourseCard 
+                                    key={course.id}
+                                    {...course}
+                                    onEnroll={() => handleEnrollCourse(course.id)}
+                                  />
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="bg-white border border-slate-200/50 rounded-[24px] p-8 text-center text-slate-400 text-xs font-bold shadow-sm">
+                                No scheduled classes available in this view.
+                              </div>
+                            )
+                          )}
+
+                          {activeSessionsTab === 'past' && (
+                            pastFilteredCourses.length > 0 ? (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                                {pastFilteredCourses.map(course => (
+                                  <CourseCard 
+                                    key={course.id}
+                                    {...course}
+                                    onEnroll={() => handleEnrollCourse(course.id)}
+                                  />
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="bg-white border border-slate-200/50 rounded-[24px] p-8 text-center text-slate-400 text-xs font-bold shadow-sm">
+                                No recorded past classes available in this view.
+                              </div>
+                            )
+                          )}
+                        </motion.div>
+                      </AnimatePresence>
+
+                    </div>
+
                   </div>
                 </section>
-              )}
-
-              {/* 2. Upcoming Classes Section */}
-              {upcomingFilteredCourses.length > 0 && (
-                <section className="space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs bg-blue-50 text-blue-700 font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-blue-200/30">
-                          Upcoming
-                        </span>
-                        <h2 className="text-[20px] font-bold text-slate-800 tracking-tight">
-                          Scheduled Classes
-                        </h2>
-                      </div>
-                      <p className="text-slate-500 text-xs font-medium">
-                        Reserve your seat for these upcoming interactive sessions and bootcamps.
-                      </p>
-                    </div>
-                    <div className="text-xs font-bold text-slate-400 bg-slate-50 border border-slate-200/80 px-3 py-1.5 rounded-xl self-start sm:self-center">
-                      {upcomingFilteredCourses.length} Scheduled
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {upcomingFilteredCourses.map(course => (
-                      <CourseCard 
-                        key={course.id}
-                        {...course}
-                        onEnroll={() => handleEnrollCourse(course.id)}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {/* 3. Past Classes Section */}
-              {pastFilteredCourses.length > 0 && (
-                <section className="space-y-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs bg-emerald-50 text-emerald-700 font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-emerald-200/30">
-                          Recorded
-                        </span>
-                        <h2 className="text-[20px] font-bold text-slate-800 tracking-tight">
-                          Past Classes & Recordings
-                        </h2>
-                      </div>
-                      <p className="text-slate-500 text-xs font-medium">
-                        Access high-definition recordings, reference notes, and code repositories of past sessions.
-                      </p>
-                    </div>
-                    <div className="text-xs font-bold text-slate-400 bg-slate-50 border border-slate-200/80 px-3 py-1.5 rounded-xl self-start sm:self-center">
-                      {pastFilteredCourses.length} Available
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {pastFilteredCourses.map(course => (
-                      <CourseCard 
-                        key={course.id}
-                        {...course}
-                        onEnroll={() => handleEnrollCourse(course.id)}
-                      />
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {/* Empty State when no courses match active filters */}
-              {liveFilteredCourses.length === 0 && upcomingFilteredCourses.length === 0 && pastFilteredCourses.length === 0 && (
+              ) : (
+                /* Empty state when all lists are completely empty */
                 <div className="bg-white border border-slate-200/50 rounded-[24px] p-8 sm:p-12 text-center text-slate-400 text-xs font-bold shadow-sm space-y-3">
                   <div className="text-3xl">📭</div>
                   <p>No classes found matching the active filter and search criteria.</p>
                   <button 
                     onClick={handleClearAllFilters}
-                    className="text-xs font-extrabold text-blue-600 hover:text-blue-800 px-4 py-2 hover:bg-blue-50 border border-blue-200/50 rounded-xl transition-all cursor-pointer select-none"
+                    className="text-xs font-extrabold text-blue-600 hover:text-blue-850 px-4 py-2 hover:bg-blue-50 border border-blue-200/50 rounded-xl transition-all cursor-pointer select-none"
                   >
                     Reset Filters
                   </button>
