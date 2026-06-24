@@ -282,8 +282,8 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       {renderTopRightRibbon()}
 
       {/* Top Section - Illustration Container */}
-      <div className="p-2 shrink-0">
-        <div className={`h-[135px] rounded-[20px] border-8 border-white flex items-center justify-center overflow-hidden relative group shadow-sm ${illustrationBgClass}`}>
+      <div className="p-2 flex-1 min-h-0 relative">
+        <div className={`h-full w-full rounded-[20px] border-8 border-white flex items-center justify-center overflow-hidden relative group shadow-sm ${illustrationBgClass}`}>
           {/* Subtle background glow */}
           <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-350" />
 
@@ -316,16 +316,16 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           <img
             src={image}
             alt={title}
-            className="object-contain max-h-[110px] select-none filter drop-shadow-[0_8px_12px_rgba(15,23,42,0.06)] relative z-0"
+            className="object-contain max-h-[90%] max-w-[90%] select-none filter drop-shadow-[0_8px_12px_rgba(15,23,42,0.06)] relative z-0"
           />
         </div>
       </div>
 
       {/* Content Area */}
-      <div className={`px-5 flex-1 flex flex-col justify-between relative ${hasBanner ? 'pt-4 pb-2' : 'pt-4 pb-5'}`}>
+      <div className={`px-5 shrink-0 flex flex-col justify-between relative ${hasBanner ? 'pt-3 pb-2' : 'pt-3 pb-4'}`}>
         {renderScheduleBadge()}
 
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           {/* Category Pill Badge Tag */}
           <div className="flex">
             <span className={`text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-lg border leading-none select-none ${getCategoryStyles()}`}>
@@ -334,7 +334,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           </div>
 
           {/* Title */}
-          <h3 className="text-[17px] lg:text-[18px] font-bold text-slate-900 leading-snug font-heading tracking-tight line-clamp-2 h-[48px]">
+          <h3 className="text-[16px] md:text-[17px] font-bold text-slate-900 leading-snug font-heading tracking-tight line-clamp-2 h-[44px]">
             {highlightText(title, searchQuery)}
           </h3>
 
