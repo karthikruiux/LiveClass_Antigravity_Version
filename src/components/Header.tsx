@@ -60,7 +60,9 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="bg-white border-b border-slate-200/80 px-4 sm:px-6 lg:px-10 py-4 sm:py-5 flex flex-col gap-4 sticky top-0 z-40">
+    <header className={`bg-white border-b border-slate-200/80 px-4 sm:px-6 lg:px-10 py-4 sm:py-5 flex flex-col gap-4 z-40 ${
+      layoutVersion === 'V2' ? 'relative' : 'sticky top-0'
+    }`}>
       <div className="flex items-center justify-between gap-4">
         
         <div className={`flex items-center gap-2 sm:gap-3 flex-1 transition-all duration-300 ${

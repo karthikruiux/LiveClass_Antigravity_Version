@@ -7,5 +7,5 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: '/LiveClass_Antigravity_Version/',
+  base: '/Live-Class---Antigravity-Version/',
 })

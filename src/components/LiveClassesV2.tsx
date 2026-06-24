@@ -433,7 +433,7 @@ export const LiveClassesV2: React.FC<LiveClassesV2Props> = ({
     <div className="w-full relative min-h-screen pb-20 bg-slate-50/40">
       
       {/* 1. STICKY DISCOVERY BAR */}
-      <div className={`sticky top-[80px] z-30 bg-white border-b border-slate-100 px-4 sm:px-6 lg:px-10 shadow-sm transition-all duration-300 ${
+      <div className={`sticky top-0 z-30 bg-white border-b border-slate-100 px-4 sm:px-6 lg:px-10 shadow-sm transition-all duration-300 ${
         isScrolled ? 'py-3' : 'py-4 sm:py-5'
       }`}>
         
