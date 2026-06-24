@@ -27,6 +27,7 @@ interface Course {
   classStatus?: 'live' | 'upcoming' | 'past';
   completedClasses?: number;
   nextClassTime?: string;
+  scheduleType?: 'mwf' | 'tts' | 'weekend';
 }
 
 interface LiveClassesV2Props {

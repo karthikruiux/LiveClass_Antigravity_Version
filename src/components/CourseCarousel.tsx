@@ -11,6 +11,7 @@ interface Course {
   runningBatches: number;
   upcomingBatches: number;
   category: 'placement' | 'dsa' | 'ai' | 'backend' | 'frontend' | 'revision';
+  scheduleType?: 'mwf' | 'tts' | 'weekend';
 }
 
 interface CourseCarouselProps {

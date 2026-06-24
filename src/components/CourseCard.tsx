@@ -4,6 +4,7 @@ import { Monitor, ArrowRight, Play, Radio, Calendar, CheckCircle2 } from 'lucide
 import { highlightText } from '../utils/searchHighlight';
 
 interface CourseCardProps {
+  id: string;
   title: string;
   image: string;
   tags: string[];
@@ -18,9 +19,11 @@ interface CourseCardProps {
   nextClassTime?: string;
   searchQuery?: string;
   category?: 'placement' | 'dsa' | 'ai' | 'backend' | 'frontend' | 'revision';
+  scheduleType?: 'mwf' | 'tts' | 'weekend';
 }
 
 export const CourseCard: React.FC<CourseCardProps> = ({
+  id,
   title,
   image,
   tags,
@@ -34,7 +37,8 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   completedClasses = 0,
   nextClassTime = '',
   searchQuery = '',
-  category = 'placement'
+  category = 'placement',
+  scheduleType
 }) => {
   const isEnrolled = typeof isEnrolledProp === 'boolean' ? isEnrolledProp : (state === 'enrolled' || state === 'live');
   const isLive = classStatus ? (classStatus === 'live') : (state === 'live');
@@ -96,9 +100,53 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 
   const illustrationBgClass = categoryBgMap[category] || 'bg-slate-100';
 
+  const renderScheduleBadge = () => {
+    const type = scheduleType || (category === 'frontend' ? 'weekend' : (parseInt(id.replace(/\D/g, '') || '0') % 2 === 1 ? 'mwf' : 'tts'));
+
+    if (type === 'weekend') {
+      return (
+        <div className="absolute bg-white flex items-center left-0 pl-6 pr-4 py-2 rounded-tr-[16px] top-[-24px] border-t border-r border-slate-200/50 shadow-[1px_-1px_3px_0px_rgba(15,23,42,0.02)]">
+          <p className="font-sans font-medium text-[12px] text-[#b45309] tracking-wider whitespace-nowrap">
+            Only Weekend
+          </p>
+        </div>
+      );
+    }
+
+    if (type === 'mwf') {
+      return (
+        <div className="absolute bg-white flex items-center left-0 pl-6 pr-4 py-2 rounded-tr-[16px] top-[-24px] border-t border-r border-slate-200/50 shadow-[1px_-1px_3px_0px_rgba(15,23,42,0.02)]">
+          <p className="font-sans font-medium text-[12px] text-[#b45309] tracking-wider whitespace-nowrap">
+            <span className="font-bold">M </span>
+            <span className="text-[#d1d1d1]">T</span>
+            <span className="font-bold">{` W `}</span>
+            <span className="text-[#d1d1d1]">T</span>
+            <span className="font-bold">{` F `}</span>
+            <span className="text-[#d1d1d1]">S S</span>
+          </p>
+        </div>
+      );
+    }
+
+    // Default to TTS
+    return (
+      <div className="absolute bg-white flex items-center left-0 pl-6 pr-4 py-2 rounded-tr-[16px] top-[-24px] border-t border-r border-slate-200/50 shadow-[1px_-1px_3px_0px_rgba(15,23,42,0.02)]">
+        <p className="font-sans font-medium text-[12px] text-[#b45309] tracking-wider whitespace-nowrap">
+          <span className="text-[#d1d1d1]">M</span>
+          <span className="font-bold">{` T `}</span>
+          <span className="text-[#d1d1d1]">W</span>
+          <span className="font-bold">{` T `}</span>
+          <span className="text-[#d1d1d1]">F</span>
+          <span className="font-bold">{` S`}</span>
+          <span className="text-[#d1d1d1]">{` S`}</span>
+        </p>
+      </div>
+    );
+  };
+
   return (
     <motion.div
-      className={`w-full border rounded-[22px] overflow-hidden flex flex-col transition-all duration-300 relative cursor-pointer ${
+      className={`w-full border rounded-[24px] overflow-hidden flex flex-col transition-all duration-300 relative cursor-pointer ${
         isLive && isEnrolled
           ? 'bg-red-50/20 border-red-200 shadow-[0_4px_16px_rgba(239,68,68,0.06)]' 
           : isLive && !isEnrolled
@@ -107,12 +155,12 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           ? 'bg-emerald-50/15 border-emerald-200 shadow-[0_4px_16px_rgba(16,185,129,0.06)]'
           : 'bg-white border-slate-200/80 hover:border-blue-400 hover:shadow-md'
       }`}
-      style={{ minHeight: '370px' }}
+      style={{ minHeight: '380px' }}
       whileHover={{ y: -4 }}
     >
       {/* Top Section - Illustration Container */}
-      <div className="p-2.5">
-        <div className={`h-[125px] rounded-[14px] flex items-center justify-center overflow-hidden relative group ${illustrationBgClass}`}>
+      <div className="p-2">
+        <div className={`h-[135px] rounded-[20px] border-8 border-white flex items-center justify-center overflow-hidden relative group shadow-sm ${illustrationBgClass}`}>
           {/* Subtle background glow */}
           <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-350" />
 
@@ -145,13 +193,14 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           <img
             src={image}
             alt={title}
-            className="object-contain max-h-[100px] select-none filter drop-shadow-[0_8px_12px_rgba(15,23,42,0.06)] relative z-0"
+            className="object-contain max-h-[110px] select-none filter drop-shadow-[0_8px_12px_rgba(15,23,42,0.06)] relative z-0"
           />
         </div>
       </div>
 
       {/* Content Area */}
-      <div className="px-5 pb-3 pt-2 flex-1 flex flex-col justify-between">
+      <div className="px-5 pb-4 pt-5 flex-1 flex flex-col justify-between relative">
+        {renderScheduleBadge()}
         <div className="space-y-3">
           {/* Category Pill Badge Tag */}
           <div className="flex">

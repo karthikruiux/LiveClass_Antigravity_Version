@@ -28,6 +28,7 @@ interface Course {
   classStatus?: 'live' | 'upcoming' | 'past';
   completedClasses?: number;
   nextClassTime?: string;
+  scheduleType?: 'mwf' | 'tts' | 'weekend';
 }
 
 const initialCourses: Course[] = [
@@ -45,7 +46,8 @@ const initialCourses: Course[] = [
     isEnrolled: true,
     classStatus: 'upcoming',
     completedClasses: 12,
-    nextClassTime: 'Next Class: Tomorrow, 10:00 AM'
+    nextClassTime: 'Next Class: Tomorrow, 10:00 AM',
+    scheduleType: 'mwf'
   },
   {
     id: 'p2',
@@ -58,7 +60,8 @@ const initialCourses: Course[] = [
     category: 'placement',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'upcoming'
+    classStatus: 'upcoming',
+    scheduleType: 'tts'
   },
   {
     id: 'p3',
@@ -71,7 +74,8 @@ const initialCourses: Course[] = [
     category: 'placement',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'past'
+    classStatus: 'past',
+    scheduleType: 'mwf'
   },
   // DSA (DSA for MAANG)
   {
@@ -86,7 +90,8 @@ const initialCourses: Course[] = [
     state: 'live',
     isEnrolled: true,
     classStatus: 'live',
-    completedClasses: 32
+    completedClasses: 32,
+    scheduleType: 'mwf'
   },
   {
     id: 'd2',
@@ -99,7 +104,8 @@ const initialCourses: Course[] = [
     category: 'dsa',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'live'
+    classStatus: 'live',
+    scheduleType: 'tts'
   },
   {
     id: 'd3',
@@ -112,7 +118,8 @@ const initialCourses: Course[] = [
     category: 'dsa',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'upcoming'
+    classStatus: 'upcoming',
+    scheduleType: 'tts'
   },
   // AI (Generative AI)
   {
@@ -127,7 +134,8 @@ const initialCourses: Course[] = [
     state: 'live',
     isEnrolled: true,
     classStatus: 'live',
-    completedClasses: 5
+    completedClasses: 5,
+    scheduleType: 'mwf'
   },
   {
     id: 'a2',
@@ -140,7 +148,8 @@ const initialCourses: Course[] = [
     category: 'ai',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'past'
+    classStatus: 'past',
+    scheduleType: 'tts'
   },
   {
     id: 'a3',
@@ -153,7 +162,8 @@ const initialCourses: Course[] = [
     category: 'ai',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'upcoming'
+    classStatus: 'upcoming',
+    scheduleType: 'mwf'
   },
   // Backend (Build Projects)
   {
@@ -167,7 +177,8 @@ const initialCourses: Course[] = [
     category: 'backend',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'live'
+    classStatus: 'live',
+    scheduleType: 'mwf'
   },
   {
     id: 'b2',
@@ -181,7 +192,8 @@ const initialCourses: Course[] = [
     state: 'enrolled',
     isEnrolled: true,
     classStatus: 'past',
-    completedClasses: 42
+    completedClasses: 42,
+    scheduleType: 'tts'
   },
   {
     id: 'b3',
@@ -194,7 +206,8 @@ const initialCourses: Course[] = [
     category: 'backend',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'upcoming'
+    classStatus: 'upcoming',
+    scheduleType: 'tts'
   },
   // Frontend (Weekend Batches)
   {
@@ -210,7 +223,8 @@ const initialCourses: Course[] = [
     isEnrolled: true,
     classStatus: 'upcoming',
     completedClasses: 18,
-    nextClassTime: 'Next Class: Today, 8:30 PM'
+    nextClassTime: 'Next Class: Today, 8:30 PM',
+    scheduleType: 'weekend'
   },
   {
     id: 'f2',
@@ -223,7 +237,8 @@ const initialCourses: Course[] = [
     category: 'frontend',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'upcoming'
+    classStatus: 'upcoming',
+    scheduleType: 'weekend'
   },
   {
     id: 'f3',
@@ -236,7 +251,8 @@ const initialCourses: Course[] = [
     category: 'frontend',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'past'
+    classStatus: 'past',
+    scheduleType: 'weekend'
   },
   // Revision (Revision Classes)
   {
@@ -250,7 +266,8 @@ const initialCourses: Course[] = [
     category: 'revision',
     state: 'not-enrolled',
     isEnrolled: false,
-    classStatus: 'upcoming'
+    classStatus: 'upcoming',
+    scheduleType: 'mwf'
   },
   {
     id: 'r2',
@@ -265,7 +282,8 @@ const initialCourses: Course[] = [
     isEnrolled: true,
     classStatus: 'upcoming',
     completedClasses: 7,
-    nextClassTime: 'Next Class: Tomorrow, 4:00 PM'
+    nextClassTime: 'Next Class: Tomorrow, 4:00 PM',
+    scheduleType: 'tts'
   }
 ];
 
