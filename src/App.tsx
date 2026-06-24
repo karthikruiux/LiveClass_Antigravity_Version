@@ -29,6 +29,15 @@ interface Course {
   completedClasses?: number;
   nextClassTime?: string;
   scheduleType?: 'mwf' | 'tts' | 'weekend';
+  isTrending?: boolean;
+  isNew?: boolean;
+  showSaleableInfo?: boolean;
+  saleableText?: string;
+  showStudentData?: boolean;
+  isProject?: boolean;
+  projectTitle?: string;
+  isRevision?: boolean;
+  completedBatches?: number;
 }
 
 const initialCourses: Course[] = [
@@ -75,7 +84,10 @@ const initialCourses: Course[] = [
     state: 'not-enrolled',
     isEnrolled: false,
     classStatus: 'past',
-    scheduleType: 'mwf'
+    scheduleType: 'mwf',
+    isTrending: true,
+    showSaleableInfo: true,
+    saleableText: "FAANG interviews are hiring again! master system design"
   },
   // DSA (DSA for MAANG)
   {
@@ -119,7 +131,9 @@ const initialCourses: Course[] = [
     state: 'not-enrolled',
     isEnrolled: false,
     classStatus: 'upcoming',
-    scheduleType: 'tts'
+    scheduleType: 'tts',
+    isNew: true,
+    showStudentData: true
   },
   // AI (Generative AI)
   {
@@ -135,7 +149,8 @@ const initialCourses: Course[] = [
     isEnrolled: true,
     classStatus: 'live',
     completedClasses: 5,
-    scheduleType: 'mwf'
+    scheduleType: 'mwf',
+    isTrending: true
   },
   {
     id: 'a2',
@@ -149,7 +164,8 @@ const initialCourses: Course[] = [
     state: 'not-enrolled',
     isEnrolled: false,
     classStatus: 'past',
-    scheduleType: 'tts'
+    scheduleType: 'tts',
+    showStudentData: true
   },
   {
     id: 'a3',
@@ -163,7 +179,9 @@ const initialCourses: Course[] = [
     state: 'not-enrolled',
     isEnrolled: false,
     classStatus: 'upcoming',
-    scheduleType: 'mwf'
+    scheduleType: 'mwf',
+    showSaleableInfo: true,
+    saleableText: "Tesla, Apple & Google are hiring Computer Vision experts"
   },
   // Backend (Build Projects)
   {
@@ -178,7 +196,11 @@ const initialCourses: Course[] = [
     state: 'not-enrolled',
     isEnrolled: false,
     classStatus: 'live',
-    scheduleType: 'mwf'
+    scheduleType: 'mwf',
+    isProject: true,
+    projectTitle: "Instagram clone",
+    showSaleableInfo: true,
+    saleableText: "Build a production-ready social media backend"
   },
   {
     id: 'b2',
@@ -193,7 +215,9 @@ const initialCourses: Course[] = [
     isEnrolled: true,
     classStatus: 'past',
     completedClasses: 42,
-    scheduleType: 'tts'
+    scheduleType: 'tts',
+    isProject: true,
+    projectTitle: "E-Commerce Database Schema"
   },
   {
     id: 'b3',
@@ -201,13 +225,16 @@ const initialCourses: Course[] = [
     image: 'course_illustration_1.png',
     tags: ['Go', 'gRPC', 'Docker', 'K8s'],
     classesCount: 55,
-    runningBatches: 2,
+    runningBatches: 0,
     upcomingBatches: 2,
     category: 'backend',
     state: 'not-enrolled',
     isEnrolled: false,
     classStatus: 'upcoming',
-    scheduleType: 'tts'
+    scheduleType: 'tts',
+    isProject: true,
+    projectTitle: "Slack-like Chat Service",
+    completedBatches: 2
   },
   // Frontend (Weekend Batches)
   {
@@ -238,7 +265,8 @@ const initialCourses: Course[] = [
     state: 'not-enrolled',
     isEnrolled: false,
     classStatus: 'upcoming',
-    scheduleType: 'weekend'
+    scheduleType: 'weekend',
+    isNew: true
   },
   {
     id: 'f3',
@@ -267,7 +295,9 @@ const initialCourses: Course[] = [
     state: 'not-enrolled',
     isEnrolled: false,
     classStatus: 'upcoming',
-    scheduleType: 'mwf'
+    scheduleType: 'mwf',
+    isRevision: true,
+    isTrending: true
   },
   {
     id: 'r2',
@@ -283,7 +313,8 @@ const initialCourses: Course[] = [
     classStatus: 'upcoming',
     completedClasses: 7,
     nextClassTime: 'Next Class: Tomorrow, 4:00 PM',
-    scheduleType: 'tts'
+    scheduleType: 'tts',
+    isRevision: true
   }
 ];
 

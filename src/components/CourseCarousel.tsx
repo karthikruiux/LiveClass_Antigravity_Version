@@ -11,7 +11,21 @@ interface Course {
   runningBatches: number;
   upcomingBatches: number;
   category: 'placement' | 'dsa' | 'ai' | 'backend' | 'frontend' | 'revision';
+  state?: 'not-enrolled' | 'enrolled' | 'live';
+  isEnrolled?: boolean;
+  classStatus?: 'live' | 'upcoming' | 'past';
+  completedClasses?: number;
+  nextClassTime?: string;
   scheduleType?: 'mwf' | 'tts' | 'weekend';
+  isTrending?: boolean;
+  isNew?: boolean;
+  showSaleableInfo?: boolean;
+  saleableText?: string;
+  showStudentData?: boolean;
+  isProject?: boolean;
+  projectTitle?: string;
+  isRevision?: boolean;
+  completedBatches?: number;
 }
 
 interface CourseCarouselProps {

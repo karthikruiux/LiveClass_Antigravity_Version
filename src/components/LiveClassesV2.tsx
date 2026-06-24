@@ -28,6 +28,15 @@ interface Course {
   completedClasses?: number;
   nextClassTime?: string;
   scheduleType?: 'mwf' | 'tts' | 'weekend';
+  isTrending?: boolean;
+  isNew?: boolean;
+  showSaleableInfo?: boolean;
+  saleableText?: string;
+  showStudentData?: boolean;
+  isProject?: boolean;
+  projectTitle?: string;
+  isRevision?: boolean;
+  completedBatches?: number;
 }
 
 interface LiveClassesV2Props {
