@@ -46,8 +46,6 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   image,
   tags,
   classesCount,
-  runningBatches,
-  upcomingBatches,
   onEnroll,
   state = 'not-enrolled',
   isEnrolled: isEnrolledProp,
@@ -66,8 +64,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
   showStudentData = false,
   isProject = false,
   projectTitle = '',
-  isRevision = false,
-  completedBatches = 0
+  isRevision = false
 }) => {
   // Resolve enrollment, live, and completed status
   const isEnrolled = typeof isEnrolledProp === 'boolean' ? isEnrolledProp : (state === 'enrolled' || state === 'live');
@@ -302,16 +299,6 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             </div>
           )}
 
-          {/* Fallback to Live Now badge if live and NOT enrolled */}
-          {isLive && !isEnrolled && (
-            <div className="absolute top-2.5 left-2.5 bg-red-600 text-white text-[10px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-md shadow-red-600/20 z-10">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
-              </span>
-              <span>LIVE NOW</span>
-            </div>
-          )}
           
           <img
             src={image}
@@ -381,13 +368,6 @@ export const CourseCard: React.FC<CourseCardProps> = ({
                   </span>
                 </div>
                 
-                {/* Live Now red text at bottom-right of content area */}
-                {isLive && (
-                  <div className="flex items-center gap-1 text-red-500 text-[10.5px] font-bold animate-pulse shrink-0">
-                    <span className="h-1.5 w-1.5 rounded-full bg-red-500 inline-block"></span>
-                    <span>Live Now</span>
-                  </div>
-                )}
               </div>
               
               <div className="w-full bg-[#e0e6ff] h-[6px] rounded-full overflow-hidden">
@@ -409,26 +389,6 @@ export const CourseCard: React.FC<CourseCardProps> = ({
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 flex-wrap text-[12px] font-semibold">
-                {/* Completed batch chip in gray, otherwise Running in green */}
-                {completedBatches > 0 || isCompleted ? (
-                  <span className="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-200">
-                    {completedBatches || 1} Completed
-                  </span>
-                ) : (
-                  runningBatches > 0 && (
-                    <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-100">
-                      {runningBatches} Running
-                    </span>
-                  )
-                )}
-                
-                {upcomingBatches > 0 && (
-                  <span className="bg-yellow-50 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-yellow-100">
-                    {upcomingBatches} Upcoming
-                  </span>
-                )}
-              </div>
             </div>
           )}
 
