@@ -2431,27 +2431,7 @@ export const LiveClassesV4: React.FC<LiveClassesV4Props> = ({
                         whileHover={{ y: -4 }}
                         className={`w-full max-w-[360px] mx-auto min-h-[395px] h-full border rounded-[24px] overflow-hidden flex flex-col justify-between transition-all duration-300 relative group select-none bg-white ${cardBorderClass}`}
                       >
-                        {/* Absolute top-right ribbon badges with thick border masking (Direct child of card container for exact corner alignment!) */}
-                        {isLive && (
-                          <div className="absolute border-8 border-white right-[-1px] top-[-1px] rounded-bl-[24px] rounded-tr-[24px] h-[36px] px-6 py-1 flex items-center justify-center bg-gradient-to-r from-red-600 to-orange-500 z-20 shadow-[0_2px_8px_rgba(239,68,68,0.15)]">
-                            <span className="text-white text-[13px] font-bold tracking-wide uppercase">Live Now</span>
-                          </div>
-                        )}
-                        {isRunning && !isLive && (
-                          <div className="absolute border-8 border-white right-[-1px] top-[-1px] rounded-bl-[24px] rounded-tr-[24px] h-[36px] px-6 py-1 flex items-center justify-center bg-gradient-to-r from-slate-700 to-slate-800 z-20 shadow-[0_2px_8px_rgba(51,65,85,0.15)]">
-                            <span className="text-white text-[12px] font-bold tracking-wide uppercase">Running</span>
-                          </div>
-                        )}
-                        {isUpcoming && (
-                          <div className="absolute border-8 border-white right-[-1px] top-[-1px] rounded-bl-[24px] rounded-tr-[24px] h-[36px] px-6 py-1 flex items-center justify-center bg-gradient-to-r from-blue-650 to-blue-800 z-20 shadow-[0_2px_8px_rgba(59,130,246,0.15)]">
-                            <span className="text-white text-[12px] font-bold tracking-wide uppercase">Upcoming</span>
-                          </div>
-                        )}
-                        {isCompleted && (
-                          <div className="absolute border-8 border-white right-[-1px] top-[-1px] rounded-bl-[24px] rounded-tr-[24px] h-[36px] px-6 py-1 flex items-center justify-center bg-gradient-to-r from-emerald-500 to-teal-650 z-20 shadow-[0_2px_8px_rgba(16,185,129,0.15)]">
-                            <span className="text-white text-[12px] font-bold tracking-wide uppercase">Completed</span>
-                          </div>
-                        )}
+
 
                         {/* Top Section - Illustration Container */}
                         <div className="p-2 h-[140px] shrink-0 relative">
