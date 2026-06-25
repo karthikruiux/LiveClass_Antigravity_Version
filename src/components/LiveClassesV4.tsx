@@ -22,10 +22,12 @@ import {
   Users,
   Layers,
   Hourglass,
-  History
+  History,
+  Sparkles
 } from 'lucide-react';
 import { highlightText } from '../utils/searchHighlight';
 import { EnrolledProgressCarousel } from './EnrolledProgressCarousel';
+import { CourseCarousel } from './CourseCarousel';
 
 interface SubTopic {
   id: string;
@@ -49,15 +51,24 @@ interface Course {
   classesCount: number;
   runningBatches: number;
   upcomingBatches: number;
-  category: string;
+  category: 'placement' | 'dsa' | 'ai' | 'backend' | 'frontend' | 'revision' | 'projects' | 'challenges' | 'interview-prep';
   state?: 'not-enrolled' | 'enrolled' | 'live';
   isEnrolled?: boolean;
   classStatus?: 'live' | 'upcoming' | 'past';
   completedClasses?: number;
   nextClassTime?: string;
-  scheduleType?: string;
+  scheduleType?: 'mwf' | 'tts' | 'weekend' | 'weekday' | 'weekly';
   recentClassTitle?: string;
   nextBatchStartDate?: string;
+  isTrending?: boolean;
+  isNew?: boolean;
+  showSaleableInfo?: boolean;
+  saleableText?: string;
+  showStudentData?: boolean;
+  isProject?: boolean;
+  projectTitle?: string;
+  isRevision?: boolean;
+  completedBatches?: number;
 }
 
 interface LiveClassesV4Props {
@@ -719,6 +730,14 @@ export const LiveClassesV4: React.FC<LiveClassesV4Props> = ({
       course.tags.some(tag => tag.toLowerCase().includes(globalSearchTerm.toLowerCase()));
 
     return matchesSchedule && matchesStatus && matchesSearch;
+  });
+
+  // Curated Recommendations Group (Trending or New courses) for V4
+  const recommendedGroup = courses.filter(c => {
+    const isWeekendCourse = c.category === 'frontend' || c.tags.some(t => t.toLowerCase().includes('weekend'));
+    if (scheduleType === 'weekday' && isWeekendCourse) return false;
+    if (scheduleType === 'weekend' && !isWeekendCourse) return false;
+    return c.isTrending || c.isNew || c.showSaleableInfo;
   });
 
   // Search Results Filters (Same as V2)
@@ -2276,6 +2295,30 @@ export const LiveClassesV4: React.FC<LiveClassesV4Props> = ({
 
             {/* My Learning Progress Section */}
             <EnrolledProgressCarousel />
+
+            {/* Curated Recommendations Section */}
+            {recommendedGroup.length > 0 && (
+              <section className="space-y-6 mt-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs bg-indigo-50/85 text-indigo-750 font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-indigo-200/35 flex items-center gap-1 leading-none select-none">
+                      <Sparkles className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
+                      <span>Recommended</span>
+                    </span>
+                    <h2 className="text-[20px] sm:text-[24px] font-bold text-slate-800 tracking-tight font-heading">
+                      Recommended as per your journey
+                    </h2>
+                  </div>
+                  <p className="text-slate-500 text-xs sm:text-[13px] font-medium">
+                    Curated trending paths, system design deep dives, and upcoming high-salary specializations tailored to your progress.
+                  </p>
+                </div>
+                <CourseCarousel 
+                  courses={recommendedGroup as any} 
+                  onEnroll={_handleEnrollCourse} 
+                />
+              </section>
+            )}
 
             {/* Premium Figma Batch Category Tabs (Placed directly on the page) */}
             <div className="w-full mt-2 relative select-none">
