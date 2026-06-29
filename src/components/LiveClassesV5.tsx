@@ -2248,8 +2248,8 @@ export const LiveClassesV5: React.FC<LiveClassesV5Props> = ({
             transition={{ duration: 0.25 }}
             className="px-4 sm:px-6 lg:px-10 py-8 max-w-7xl mx-auto w-full flex flex-col gap-6"
           >
-            {/* PAGE HEADER ROW (Sticky to top with full-width background, scheduling toggle, and search button) */}
-            <div className="sticky top-[72px] sm:top-[80px] z-30 bg-[#f7f7f7]/95 backdrop-blur-md px-4 sm:px-6 lg:px-10 -mx-4 sm:-mx-6 lg:-mx-10 py-4 border-b border-slate-200/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300">
+            {/* PAGE HEADER ROW (scheduling toggle, and search button) */}
+            <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300">
               <h1 className="text-[28px] sm:text-[32px] font-bold text-text-primary font-heading tracking-tight">
                 Live Classes
               </h1>
@@ -2296,76 +2296,85 @@ export const LiveClassesV5: React.FC<LiveClassesV5Props> = ({
               </section>
             )}
             {/* Sticky Filter Header Container */}
-            <div className="sticky top-[144px] sm:top-[156px] z-20 bg-[#f7f7f7]/95 backdrop-blur-md px-4 sm:px-6 lg:px-10 -mx-4 sm:-mx-6 lg:-mx-10 py-4 border-b border-slate-200/60 shadow-sm">
+            <div className={`sticky top-[72px] sm:top-[80px] z-20 transition-all duration-300 ${
+              _isScrolled 
+                ? 'bg-white/95 backdrop-blur-md py-2.5 border-b border-slate-200/80 shadow-[0_4px_12px_rgba(0,0,0,0.02)] -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10' 
+                : 'pt-6 pb-2 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10'
+            }`}>
               {/* Enrolled Courses Tabs Section Header */}
-              <div>
+              <div className={`transition-all duration-300 ${_isScrolled ? 'h-0 overflow-hidden opacity-0 mb-0' : 'mb-2'}`}>
                 <h2 className="text-[20px] sm:text-[24px] font-bold text-slate-800 font-heading tracking-tight">
                   Batches Schedule
                 </h2>
               </div>
 
-              {/* Premium Figma Batch Category Tabs (Placed directly on the page) */}
-              <div className="w-full mt-2 relative select-none flex items-end justify-between gap-4">
-                {/* Horizontal line running along the bottom */}
-                <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#335CFF]" />
+              {/* Status Tabs and Chips Container */}
+              <div className={`flex flex-col gap-3 ${_isScrolled ? 'md:flex-row md:items-center md:justify-between' : ''}`}>
                 
-                <div className="flex items-end gap-1 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-0 relative z-10 flex-1">
-                  {batchStatusTabs.map((tab) => {
-                    const IconComponent = tab.icon;
-                    const isActive = selectedStatus === tab.id;
+                {/* Premium Figma Batch Category Tabs */}
+                <div className={`relative select-none flex items-end ${_isScrolled ? 'w-full md:w-auto h-[32px]' : 'w-full mt-2'}`}>
+                  {/* Horizontal line running along the bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#335CFF]" />
+                  
+                  <div className="flex items-end gap-1 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-0 relative z-10 flex-1">
+                    {batchStatusTabs.map((tab) => {
+                      const IconComponent = tab.icon;
+                      const isActive = selectedStatus === tab.id;
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => setSelectedStatus(tab.id)}
+                          className={`relative w-[120px] sm:w-[132px] h-[32px] sm:h-[35px] flex items-center justify-center gap-1.5 cursor-pointer select-none border-none bg-transparent transition-colors duration-300 ${
+                            isActive ? 'text-[#335CFF] font-bold' : 'text-[#5C5C5C] hover:text-[#335CFF]'
+                          }`}
+                        >
+                          {isActive && (
+                            <motion.div
+                              layoutId="activeCategoryTabBg"
+                              className="absolute inset-0 -z-10"
+                              transition={{ type: 'spring', stiffness: 350, damping: 32 }}
+                            >
+                              <ActiveTabBackground />
+                            </motion.div>
+                          )}
+                          <div className="relative flex-row flex items-center justify-center gap-1.5 z-10 pb-0.5">
+                            <IconComponent className={`w-3.5 h-3.5 transition-colors duration-300 ${isActive ? 'text-[#335CFF]' : 'text-[#5C5C5C]'}`} />
+                            <span className="text-[12.5px] sm:text-xs tracking-[-0.084px]">{tab.label}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Types Filter Chips Row */}
+                <div className="flex flex-wrap items-center gap-1.5 select-none">
+                  {[
+                    { id: 'all', label: 'All Types' },
+                    { id: 'placement', label: 'Placement Prep' },
+                    { id: 'revision', label: 'Revision' },
+                    { id: 'challenges', label: 'Challenges' },
+                    { id: 'interview', label: 'Interview Prep' },
+                    { id: 'projects', label: 'Projects' },
+                    { id: 'course', label: 'Courses' },
+                  ].map((type) => {
+                    const isSelected = selectedCardType === type.id;
                     return (
                       <button
-                        key={tab.id}
-                        onClick={() => setSelectedStatus(tab.id)}
-                        className={`relative w-[152px] h-[37px] flex items-center justify-center gap-2 cursor-pointer select-none border-none bg-transparent transition-colors duration-300 ${
-                          isActive ? 'text-[#335CFF] font-semibold' : 'text-[#5C5C5C] hover:text-[#335CFF]'
+                        key={type.id}
+                        onClick={() => setSelectedCardType(type.id)}
+                        className={`px-3.5 py-1.5 rounded-full text-[11px] font-extrabold border transition-all duration-200 cursor-pointer active:scale-95 ${
+                          isSelected
+                            ? 'bg-[#1845FF] border-[#1845FF] text-white shadow-sm shadow-[#1845FF]/10'
+                            : 'bg-white border-slate-200 text-slate-650 hover:bg-slate-50 hover:border-slate-350'
                         }`}
                       >
-                        {isActive && (
-                          <motion.div
-                            layoutId="activeCategoryTabBg"
-                            className="absolute inset-0 -z-10"
-                            transition={{ type: 'spring', stiffness: 350, damping: 32 }}
-                          >
-                            <ActiveTabBackground />
-                          </motion.div>
-                        )}
-                        <div className="relative flex-row flex items-center justify-center gap-1.5 z-10 pb-0.5">
-                          <IconComponent className={`w-4 h-4 transition-colors duration-300 ${isActive ? 'text-[#335CFF]' : 'text-[#5C5C5C]'}`} />
-                          <span className="text-sm tracking-[-0.084px]">{tab.label}</span>
-                        </div>
+                        {type.label}
                       </button>
                     );
                   })}
                 </div>
-              </div>
 
-              {/* Types Filter Chips Row */}
-              <div className="flex flex-wrap items-center gap-2 mt-4 select-none">
-                {[
-                  { id: 'all', label: 'All Types' },
-                  { id: 'placement', label: 'Placement Prep' },
-                  { id: 'revision', label: 'Revision' },
-                  { id: 'challenges', label: 'Challenges' },
-                  { id: 'interview', label: 'Interview Prep' },
-                  { id: 'projects', label: 'Projects' },
-                  { id: 'course', label: 'Courses' },
-                ].map((type) => {
-                  const isSelected = selectedCardType === type.id;
-                  return (
-                    <button
-                      key={type.id}
-                      onClick={() => setSelectedCardType(type.id)}
-                      className={`px-3.5 py-1.5 rounded-full text-[11px] font-extrabold border transition-all duration-200 cursor-pointer active:scale-95 ${
-                        isSelected
-                          ? 'bg-[#1845FF] border-[#1845FF] text-white shadow-sm shadow-[#1845FF]/10'
-                          : 'bg-white border-slate-200 text-slate-650 hover:bg-slate-50 hover:border-slate-350'
-                      }`}
-                    >
-                      {type.label}
-                    </button>
-                  );
-                })}
               </div>
             </div>
 
