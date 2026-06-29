@@ -643,6 +643,7 @@ export const LiveClassesV4: React.FC<LiveClassesV4Props> = ({
   const setScheduleType = onScheduleTypeChange || setLocalScheduleType;
 
   const [selectedStatus, setSelectedStatus] = useState<string>('running');
+  const [selectedCardType, setSelectedCardType] = useState<string>('all');
 
   // Local reactive state for courses data to allow dynamic inline enrollment
   const [courses, setCourses] = useState<Course[]>(mockCourses);
@@ -729,7 +730,25 @@ export const LiveClassesV4: React.FC<LiveClassesV4Props> = ({
       course.title.toLowerCase().includes(globalSearchTerm.toLowerCase()) ||
       course.tags.some(tag => tag.toLowerCase().includes(globalSearchTerm.toLowerCase()));
 
-    return matchesSchedule && matchesStatus && matchesSearch;
+    // 4. Card Type Filter
+    let matchesCardType = true;
+    if (selectedCardType !== 'all') {
+      if (selectedCardType === 'placement') {
+        matchesCardType = course.category === 'placement';
+      } else if (selectedCardType === 'revision') {
+        matchesCardType = course.category === 'revision' || course.isRevision === true;
+      } else if (selectedCardType === 'challenges') {
+        matchesCardType = course.category === 'challenges' || course.category === 'dsa';
+      } else if (selectedCardType === 'interview') {
+        matchesCardType = course.category === 'interview-prep';
+      } else if (selectedCardType === 'projects') {
+        matchesCardType = course.category === 'projects' || course.isProject === true;
+      } else if (selectedCardType === 'course') {
+        matchesCardType = ['backend', 'frontend', 'ai'].includes(course.category);
+      }
+    }
+
+    return matchesSchedule && matchesStatus && matchesSearch && matchesCardType;
   });
 
   // Curated Recommendations Group (Trending or New courses) for V4
@@ -2327,11 +2346,11 @@ export const LiveClassesV4: React.FC<LiveClassesV4Props> = ({
             </div>
 
             {/* Premium Figma Batch Category Tabs (Placed directly on the page) */}
-            <div className="w-full mt-2 relative select-none">
+            <div className="w-full mt-2 relative select-none flex items-end justify-between gap-4">
               {/* Horizontal line running along the bottom */}
               <div className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#335CFF]" />
               
-              <div className="flex items-end gap-1 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-0 relative z-10">
+              <div className="flex items-end gap-1 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-0 relative z-10 flex-1">
                 {batchStatusTabs.map((tab) => {
                   const IconComponent = tab.icon;
                   const isActive = selectedStatus === tab.id;
@@ -2360,6 +2379,27 @@ export const LiveClassesV4: React.FC<LiveClassesV4Props> = ({
                   );
                 })}
               </div>
+
+              {/* Right Side: Secondary Filter Dropdown */}
+              <div className="relative z-20 pb-[5px] flex items-center shrink-0">
+                <div className="relative flex items-center bg-white border border-slate-200 rounded-xl px-3 py-1 shadow-sm hover:border-[#335CFF]/50 transition-all cursor-pointer">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mr-1.5 select-none">Type:</span>
+                  <select
+                    value={selectedCardType}
+                    onChange={(e) => setSelectedCardType(e.target.value)}
+                    className="bg-transparent border-none text-[12px] font-bold text-slate-700 focus:outline-none cursor-pointer pr-5 appearance-none z-10"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="placement">Placement Prep</option>
+                    <option value="revision">Revision</option>
+                    <option value="challenges">Challenges</option>
+                    <option value="interview">Interview Prep</option>
+                    <option value="projects">Projects</option>
+                    <option value="course">Courses</option>
+                  </select>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 pointer-events-none z-0" />
+                </div>
+              </div>
             </div>
 
             {/* Main Course Grid */}
@@ -2372,6 +2412,11 @@ export const LiveClassesV4: React.FC<LiveClassesV4Props> = ({
                   {selectedStatus !== 'all' && (
                     <span className="bg-slate-100 text-slate-600 text-xs font-bold px-2.5 py-1 rounded-full capitalize">
                       Status: {selectedStatus === 'running' ? 'Running' : selectedStatus === 'upcoming' ? 'Upcoming' : 'Completed'}
+                    </span>
+                  )}
+                  {selectedCardType !== 'all' && (
+                    <span className="bg-indigo-50 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full border border-indigo-100 capitalize">
+                      Type: {selectedCardType === 'placement' ? 'Placement Prep' : selectedCardType === 'revision' ? 'Revision' : selectedCardType === 'challenges' ? 'Challenges' : selectedCardType === 'interview' ? 'Interview Prep' : selectedCardType === 'projects' ? 'Projects' : 'Courses'}
                     </span>
                   )}
                   <span className="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full capitalize">
