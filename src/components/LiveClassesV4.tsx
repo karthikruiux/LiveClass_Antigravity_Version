@@ -2322,7 +2322,7 @@ export const LiveClassesV4: React.FC<LiveClassesV4Props> = ({
             {/* Enrolled Courses Tabs Section Header */}
             <div className="mt-8">
               <h2 className="text-[20px] sm:text-[24px] font-bold text-slate-800 font-heading tracking-tight">
-                Enrolled Courses
+                Batches Schedule
               </h2>
             </div>
 
