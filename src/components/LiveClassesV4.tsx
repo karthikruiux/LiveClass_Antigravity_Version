@@ -2319,6 +2319,12 @@ export const LiveClassesV4: React.FC<LiveClassesV4Props> = ({
                 />
               </section>
             )}
+            {/* Enrolled Courses Tabs Section Header */}
+            <div className="mt-8">
+              <h2 className="text-[20px] sm:text-[24px] font-bold text-slate-800 font-heading tracking-tight">
+                Enrolled Courses
+              </h2>
+            </div>
 
             {/* Premium Figma Batch Category Tabs (Placed directly on the page) */}
             <div className="w-full mt-2 relative select-none">
